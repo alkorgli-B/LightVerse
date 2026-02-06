@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X } from 'lucide-react';
+import { Sparkles, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useUniverseStore } from '../store/universeStore';
 
 const COLORS = [
@@ -27,21 +27,13 @@ export default function Onboarding() {
   const setMySoulId = useUniverseStore((state) => state.setMySoulId);
 
   const handleCreate = () => {
-    // Random position in space
     const position: [number, number, number] = [
       (Math.random() - 0.5) * 30,
       (Math.random() - 0.5) * 20,
       (Math.random() - 0.5) * 30,
     ];
 
-    const soul = addSoul({
-      color,
-      message,
-      position,
-      size,
-      speed,
-    });
-
+    const soul = addSoul({ color, message, position, size, speed });
     setMySoulId(soul.id);
     setShowOnboarding(false);
   };
@@ -54,183 +46,132 @@ export default function Onboarding() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+        className="fixed inset-0 z-[60] flex items-end md:items-center justify-center bg-black/90 backdrop-blur-md"
       >
         <motion.div
-          initial={{ scale: 0.9, y: 20 }}
-          animate={{ scale: 1, y: 0 }}
-          className="relative w-full max-w-2xl mx-4 bg-gradient-to-br from-cosmic-purple to-cosmic-blue rounded-2xl shadow-2xl border border-white/10 overflow-hidden"
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ type: "spring", damping: 25, stiffness: 200 }}
+          className="relative w-full max-w-2xl bg-gradient-to-b from-cosmic-purple to-cosmic-dark rounded-t-[2.5rem] md:rounded-2xl shadow-2xl border-t border-white/20 h-[92vh] md:h-auto overflow-hidden flex flex-col"
         >
+          {/* Handle للموبايل */}
+          <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mt-4 md:hidden" />
+
           {/* Header */}
-          <div className="relative p-8 text-center border-b border-white/10">
-            <Sparkles className="w-12 h-12 mx-auto mb-4 text-yellow-400 animate-pulse-glow" />
-            <h1 className="text-4xl font-bold text-white mb-2">
+          <div className="p-6 md:p-8 text-center">
+            <h1 className="text-2xl md:text-4xl font-bold text-white mb-1">
               أنشئ روحك المضيئة
             </h1>
-            <p className="text-gray-300">
-              كل روح فريدة، كل ضوء له قصة
-            </p>
-            <div className="flex justify-center gap-2 mt-4">
+            <div className="flex justify-center gap-1.5 mt-4">
               {[1, 2, 3, 4].map((s) => (
                 <div
                   key={s}
-                  className={`h-2 w-12 rounded-full transition-all ${
-                    s <= step ? 'bg-yellow-400' : 'bg-white/20'
+                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                    s === step ? 'w-8 bg-yellow-400' : 'w-4 bg-white/10'
                   }`}
                 />
               ))}
             </div>
           </div>
 
-          {/* Content */}
-          <div className="p-8">
-            {/* Step 1: Color */}
+          {/* Content - جعلناه مرن ليتناسب مع لوحة المفاتيح */}
+          <div className="flex-1 overflow-y-auto px-6 md:px-10 py-4">
             {step === 1 && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <h2 className="text-2xl font-bold text-white mb-6 text-center">
-                  1️⃣ اختر لون روحك
-                </h2>
-                <div className="grid grid-cols-4 gap-4">
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+                <h2 className="text-lg text-gray-400 mb-6 text-center">ما هو لون شعورك الآن؟</h2>
+                <div className="grid grid-cols-2 xs:grid-cols-4 gap-3">
                   {COLORS.map((c) => (
                     <button
                       key={c.color}
                       onClick={() => setColor(c.color)}
-                      className={`relative p-6 rounded-xl transition-all ${
-                        color === c.color
-                          ? 'ring-4 ring-yellow-400 scale-110'
-                          : 'hover:scale-105'
+                      className={`flex flex-col items-center p-4 rounded-2xl transition-all ${
+                        color === c.color ? 'bg-white/20 ring-2 ring-yellow-400' : 'bg-white/5'
                       }`}
-                      style={{
-                        backgroundColor: c.color,
-                        boxShadow: `0 0 30px ${c.color}50`,
-                      }}
                     >
-                      <div className="text-4xl mb-2">{c.emoji}</div>
-                      <div className="text-sm font-bold text-white">
-                        {c.name}
-                      </div>
+                      <span className="text-3xl mb-2">{c.emoji}</span>
+                      <span className="text-xs text-white font-medium">{c.name}</span>
                     </button>
                   ))}
                 </div>
               </motion.div>
             )}
 
-            {/* Step 2: Message */}
             {step === 2 && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <h2 className="text-2xl font-bold text-white mb-6 text-center">
-                  2️⃣ اترك رسالة للعالم
-                </h2>
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                <h2 className="text-lg text-gray-400 mb-6 text-center">اكتب ذكرى أو رسالة</h2>
                 <textarea
+                  autoFocus
                   value={message}
                   onChange={(e) => setMessage(e.target.value.slice(0, 100))}
-                  placeholder="شاركنا فكرة، حلم، أو شعور..."
-                  className="w-full h-32 p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+                  placeholder="شاركنا ما يجول في خاطرك..."
+                  className="w-full h-40 p-5 bg-white/5 border border-white/10 rounded-2xl text-white text-lg placeholder-gray-500 focus:ring-2 focus:ring-yellow-400 outline-none resize-none"
                   dir="rtl"
                 />
-                <p className="text-right text-sm text-gray-400 mt-2">
-                  {message.length}/100 حرف (اختياري)
-                </p>
+                <div className="text-left mt-2 text-xs text-gray-500">{message.length}/100</div>
               </motion.div>
             )}
 
-            {/* Step 3: Size */}
             {step === 3 && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <h2 className="text-2xl font-bold text-white mb-6 text-center">
-                  3️⃣ حجم التوهج
-                </h2>
-                <div className="flex items-center justify-center gap-8 mb-8">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
+                <h2 className="text-lg text-gray-400 mb-10">اختر حجم حضورك</h2>
+                <div className="flex items-center justify-center h-32 mb-10">
                   <div
-                    className="rounded-full transition-all"
+                    className="rounded-full shadow-lg transition-all duration-300"
                     style={{
-                      width: `${size * 100}px`,
-                      height: `${size * 100}px`,
+                      width: `${size * 120}px`,
+                      height: `${size * 120}px`,
                       backgroundColor: color,
-                      boxShadow: `0 0 ${size * 50}px ${color}`,
+                      boxShadow: `0 0 ${size * 60}px ${color}`,
                     }}
                   />
                 </div>
                 <input
-                  type="range"
-                  min="0.3"
-                  max="1"
-                  step="0.1"
-                  value={size}
-                  onChange={(e) => setSize(Number(e.target.value))}
-                  className="w-full"
+                  type="range" min="0.3" max="1" step="0.1"
+                  value={size} onChange={(e) => setSize(Number(e.target.value))}
+                  className="w-full accent-yellow-400"
                 />
-                <div className="flex justify-between text-sm text-gray-400 mt-2">
-                  <span>صغير</span>
-                  <span>كبير</span>
-                </div>
               </motion.div>
             )}
 
-            {/* Step 4: Speed */}
             {step === 4 && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <h2 className="text-2xl font-bold text-white mb-6 text-center">
-                  4️⃣ سرعة الحركة
-                </h2>
-                <div className="flex items-center justify-center gap-4 mb-8">
-                  <div className="text-6xl">
-                    {speed < 0.7 ? '🐢' : speed > 1.3 ? '🚀' : '🏃'}
-                  </div>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
+                <h2 className="text-lg text-gray-400 mb-10">سرعة تدفق الروح</h2>
+                <div className="text-7xl mb-10 animate-float">
+                  {speed < 0.7 ? '🐢' : speed > 1.3 ? '🚀' : '🏃'}
                 </div>
                 <input
-                  type="range"
-                  min="0.5"
-                  max="2"
-                  step="0.1"
-                  value={speed}
-                  onChange={(e) => setSpeed(Number(e.target.value))}
-                  className="w-full"
+                  type="range" min="0.5" max="2" step="0.1"
+                  value={speed} onChange={(e) => setSpeed(Number(e.target.value))}
+                  className="w-full accent-yellow-400"
                 />
-                <div className="flex justify-between text-sm text-gray-400 mt-2">
-                  <span>بطيء</span>
-                  <span>سريع</span>
-                </div>
               </motion.div>
             )}
           </div>
 
-          {/* Footer */}
-          <div className="flex justify-between p-8 border-t border-white/10">
+          {/* Footer - أزرار ثابتة في الأسفل */}
+          <div className="p-6 md:p-8 bg-black/20 backdrop-blur-md flex gap-3">
             {step > 1 && (
               <button
                 onClick={() => setStep(step - 1)}
-                className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all"
+                className="flex-1 py-4 bg-white/5 text-white rounded-2xl font-bold flex items-center justify-center gap-2"
               >
-                السابق
+                <ChevronLeft className="w-5 h-5" /> السابق
               </button>
             )}
             {step < 4 ? (
               <button
                 onClick={() => setStep(step + 1)}
-                className="mr-auto px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-bold rounded-lg transition-all"
+                className="flex-[2] py-4 bg-yellow-400 text-black rounded-2xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-yellow-400/20"
               >
-                التالي
+                التالي <ChevronRight className="w-5 h-5" />
               </button>
             ) : (
               <button
                 onClick={handleCreate}
-                className="mr-auto px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-lg transition-all flex items-center gap-2 text-lg"
+                className="flex-[2] py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-2xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-orange-500/20"
               >
-                <Sparkles className="w-5 h-5" />
-                إطلاق روحي في LightVerse
+                <Sparkles className="w-5 h-5" /> إطلاق الروح
               </button>
             )}
           </div>
