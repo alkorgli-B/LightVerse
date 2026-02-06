@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Zap, Link2, Star, Eye, Calendar, TrendingUp } from 'lucide-react';
+import { X, Zap, Link2, Star, Calendar } from 'lucide-react';
 import { useUniverseStore } from '../store/universeStore';
 
 export default function Dashboard() {
@@ -21,187 +21,121 @@ export default function Dashboard() {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={() => setShowDashboard(false)}
-        className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+        className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-md p-0 md:p-4"
       >
         <motion.div
-          initial={{ scale: 0.9, y: 20 }}
-          animate={{ scale: 1, y: 0 }}
-          exit={{ scale: 0.9, y: 20 }}
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ type: "spring", damping: 25, stiffness: 200 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-2xl bg-gradient-to-br from-cosmic-purple to-cosmic-blue rounded-2xl shadow-2xl border border-white/10 overflow-hidden max-h-[90vh] overflow-y-auto"
+          className="relative w-full max-w-2xl bg-gradient-to-br from-cosmic-purple to-cosmic-blue rounded-t-3xl md:rounded-2xl shadow-2xl border-t md:border border-white/20 overflow-hidden h-[85vh] md:h-auto max-h-[90vh] overflow-y-auto"
         >
+          {/* مقبض سحب للموبايل (Visual Indicator) */}
+          <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mt-3 md:hidden" />
+
           {/* Close button */}
           <button
             onClick={() => setShowDashboard(false)}
-            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all z-10"
+            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all z-10"
           >
-            <X className="w-5 h-5 text-white" />
+            <X className="w-6 h-6 text-white" />
           </button>
 
-          {/* Header */}
-          <div className="p-8 border-b border-white/10">
-            <div className="flex items-center gap-4">
+          {/* Header - تحسين للموبايل */}
+          <div className="p-6 md:p-8 border-b border-white/10">
+            <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-right">
               <div
-                className="w-16 h-16 rounded-full"
+                className="w-20 h-20 rounded-full border-2 border-white/20"
                 style={{
                   backgroundColor: mySoul.color,
-                  boxShadow: `0 0 30px ${mySoul.color}`,
+                  boxShadow: `0 0 40px ${mySoul.color}`,
                 }}
               />
               <div>
-                <h1 className="text-3xl font-bold text-white">
+                <h1 className="text-2xl md:text-3xl font-bold text-white">
                   💫 روحك في LightVerse
                 </h1>
-                <p className="text-gray-300">
-                  {mySoul.color} • {daysSince === 0 ? 'اليوم' : `${daysSince} يوم`}
+                <p className="text-gray-400">
+                   {daysSince === 0 ? 'انضمت اليوم' : `منذ ${daysSince} يوم`}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Stats Grid */}
-          <div className="p-8 space-y-6">
+          <div className="p-6 md:p-8 space-y-6">
             {/* Message */}
             {mySoul.message && (
-              <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-                <p className="text-gray-400 text-sm mb-2">رسالتك:</p>
-                <p className="text-white text-lg" dir="rtl">
+              <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                <p className="text-gray-400 text-xs mb-2">رسالتك للعالم:</p>
+                <p className="text-white text-lg leading-relaxed" dir="rtl">
                   "{mySoul.message}"
                 </p>
               </div>
             )}
 
-            {/* Main Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-4 bg-white/5 rounded-lg border border-white/10 text-center">
-                <Zap className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
-                <div className="text-3xl font-bold text-white">{mySoul.energy}</div>
-                <div className="text-sm text-gray-400">طاقة مستلمة</div>
-              </div>
-              
-              <div className="p-4 bg-white/5 rounded-lg border border-white/10 text-center">
-                <Link2 className="w-8 h-8 mx-auto mb-2 text-blue-400" />
-                <div className="text-3xl font-bold text-white">{mySoul.connections.length}</div>
-                <div className="text-sm text-gray-400">اتصالات</div>
-              </div>
-              
-              <div className="p-4 bg-white/5 rounded-lg border border-white/10 text-center">
-                <Star className="w-8 h-8 mx-auto mb-2 text-purple-400" />
-                <div className="text-3xl font-bold text-white">
-                  {mySoul.isStarred ? '⭐' : '0'}
-                </div>
-                <div className="text-sm text-gray-400">نجوم</div>
-              </div>
-              
-              <div className="p-4 bg-white/5 rounded-lg border border-white/10 text-center">
-                <Calendar className="w-8 h-8 mx-auto mb-2 text-green-400" />
-                <div className="text-3xl font-bold text-white">{daysSince}</div>
-                <div className="text-sm text-gray-400">يوم</div>
-              </div>
+            {/* Main Stats - شبكة مرنة */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+              <StatCard icon={<Zap className="text-yellow-400" />} val={mySoul.energy} label="طاقة" />
+              <StatCard icon={<Link2 className="text-blue-400" />} val={mySoul.connections.length} label="اتصال" />
+              <StatCard icon={<Star className="text-purple-400" />} val={mySoul.isStarred ? '1' : '0'} label="نجوم" />
+              <StatCard icon={<Calendar className="text-green-400" />} val={daysSince} label="أيام" />
             </div>
 
-            {/* Achievements */}
-            <div className="space-y-3">
+            {/* Achievements - قائمة إنجازات مبسطة */}
+            <div className="space-y-4">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
                 🏆 الإنجازات
               </h2>
-              
-              <div className="space-y-2">
-                {/* First Light */}
-                <div className="flex items-center gap-3 p-3 bg-green-500/20 border border-green-500/50 rounded-lg">
-                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-2xl">
-                    ✅
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-white font-bold">First Light</div>
-                    <div className="text-sm text-gray-300">أنشئ روحك</div>
-                  </div>
-                </div>
-
-                {/* Explorer */}
-                {mySoul.energy >= 5 ? (
-                  <div className="flex items-center gap-3 p-3 bg-green-500/20 border border-green-500/50 rounded-lg">
-                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-2xl">
-                      ✅
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-white font-bold">Friendly</div>
-                      <div className="text-sm text-gray-300">استلم 5 طاقات</div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg opacity-50">
-                    <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-2xl">
-                      🔒
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-white font-bold">Friendly</div>
-                      <div className="text-sm text-gray-300">استلم 5 طاقات ({mySoul.energy}/5)</div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Social Butterfly */}
-                {mySoul.connections.length >= 10 ? (
-                  <div className="flex items-center gap-3 p-3 bg-green-500/20 border border-green-500/50 rounded-lg">
-                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-2xl">
-                      ✅
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-white font-bold">Social Butterfly</div>
-                      <div className="text-sm text-gray-300">اتصل بـ10 أرواح</div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg opacity-50">
-                    <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-2xl">
-                      🔒
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-white font-bold">Social Butterfly</div>
-                      <div className="text-sm text-gray-300">اتصل بـ10 أرواح ({mySoul.connections.length}/10)</div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Super Nova */}
-                {mySoul.energy >= 100 ? (
-                  <div className="flex items-center gap-3 p-3 bg-yellow-500/20 border border-yellow-500/50 rounded-lg">
-                    <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-2xl">
-                      ⭐
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-white font-bold">Super Nova</div>
-                      <div className="text-sm text-gray-300">اجمع 100 طاقة</div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg opacity-50">
-                    <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-2xl">
-                      🔒
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-white font-bold">Super Nova</div>
-                      <div className="text-sm text-gray-300">اجمع 100 طاقة ({mySoul.energy}/100)</div>
-                    </div>
-                  </div>
-                )}
+              <div className="grid grid-cols-1 gap-3">
+                <AchievementItem 
+                  done={true} 
+                  title="First Light" 
+                  desc="أنشئ روحك" 
+                  icon="✅" 
+                />
+                <AchievementItem 
+                  done={mySoul.energy >= 5} 
+                  title="Friendly" 
+                  desc={`استلم 5 طاقات (${mySoul.energy}/5)`} 
+                  icon={mySoul.energy >= 5 ? "✅" : "🔒"} 
+                />
               </div>
             </div>
 
-            {/* Position Info */}
-            <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-              <h3 className="text-lg font-bold text-white mb-3">📍 موقع روحك</h3>
-              <div className="space-y-2 text-sm text-gray-300">
-                <div>Sector: {Math.floor(mySoul.position[0])} / {Math.floor(mySoul.position[2])}</div>
-                <div>الارتفاع: {Math.floor(mySoul.position[1])}</div>
-                <div>الحجم: {mySoul.size.toFixed(1)}</div>
-                <div>السرعة: {mySoul.speed.toFixed(1)}x</div>
-              </div>
+            {/* Position Info - نسخة مخففة للموبايل */}
+            <div className="p-4 bg-white/5 rounded-xl border border-white/10 text-xs text-gray-400 flex justify-between">
+              <span>القطاع: {Math.floor(mySoul.position[0])}/{Math.floor(mySoul.position[2])}</span>
+              <span>السرعة: {mySoul.speed.toFixed(1)}x</span>
             </div>
           </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
+  );
+}
+
+// مكونات فرعية لتنظيف الكود وضمان استقرار الـ Build
+function StatCard({ icon, val, label }: { icon: any, val: any, label: string }) {
+  return (
+    <div className="p-4 bg-white/5 rounded-xl border border-white/10 text-center">
+      <div className="flex justify-center mb-1">{icon}</div>
+      <div className="text-2xl font-bold text-white">{val}</div>
+      <div className="text-[10px] uppercase tracking-wider text-gray-500">{label}</div>
+    </div>
+  );
+}
+
+function AchievementItem({ done, title, desc, icon }: { done: boolean, title: string, desc: string, icon: string }) {
+  return (
+    <div className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${done ? 'bg-green-500/10 border-green-500/30' : 'bg-white/5 border-white/10 opacity-60'}`}>
+      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${done ? 'bg-green-500' : 'bg-gray-700'}`}>
+        {icon}
+      </div>
+      <div>
+        <div className="text-white font-bold text-sm">{title}</div>
+        <div className="text-xs text-gray-400">{desc}</div>
+      </div>
+    </div>
   );
 }
