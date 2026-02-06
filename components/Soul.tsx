@@ -123,10 +123,14 @@ export default function Soul({ soul }: SoulProps) {
         </Html>
       )}
 
-      {/* Energy indicator */}
+            {/* Energy indicator */}
       {soul.energy > 50 && (
         <Sphere args={[soul.size * 0.3, 8, 8]} position={[0, soul.size + 0.3, 0]}>
-          <meshBasicMaterial color="#ffd700" emissive="#ffd700" emissiveIntensity={2} />
+          <meshStandardMaterial 
+            color="#ffd700" 
+            emissive="#ffd700" 
+            emissiveIntensity={2} 
+          />
         </Sphere>
       )}
     </group>
