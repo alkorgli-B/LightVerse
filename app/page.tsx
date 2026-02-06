@@ -1,40 +1,35 @@
 "use client";
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import WelcomeScreen from '../components/WelcomeScreen';
-import Onboarding from '../components/Onboarding';
-import SoulModal from '../components/SoulModal';
-import Dashboard from '../components/Dashboard';
-import LiveFeed from '../components/LiveFeed';
-import Controls from '../components/Controls';
 import { useUniverseStore } from '../store/universeStore';
 
-// Dynamically import Universe to avoid SSR issues with Three.js
+// 1. استيراد المكونات ديناميكياً لضمان عدم تشغيلها في السيرفر
 const Universe = dynamic(() => import('../components/Universe'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-cosmic-dark via-cosmic-purple to-cosmic-blue">
+    <div className="w-full h-screen flex items-center justify-center bg-black">
       <div className="spinner" />
     </div>
   ),
 });
 
+const WelcomeScreen = dynamic(() => import('../components/WelcomeScreen'), { ssr: false });
+const Onboarding = dynamic(() => import('../components/Onboarding'), { ssr: false });
+const SoulModal = dynamic(() => import('../components/SoulModal'), { ssr: false });
+const Dashboard = dynamic(() => import('../components/Dashboard'), { ssr: false });
+const LiveFeed = dynamic(() => import('../components/LiveFeed'), { ssr: false });
+const Controls = dynamic(() => import('../components/Controls'), { ssr: false });
+
 export default function Home() {
   const addSoul = useUniverseStore((state) => state.addSoul);
 
-  // Generate demo souls on mount
   useEffect(() => {
-    const colors = ['#ef4444', '#3b82f6', '#fbbf24', '#10b981', '#8b5cf6', '#f3f4f6'];
-    const messages = [
-      'أحلم بعالم أفضل',
-      'السلام للجميع',
-      'الحب هو الإجابة',
-      'كن التغيير',
-      'أنا هنا',
-      'معاً أقوى',
-    ];
+    // حماية إضافية للتأكد من أننا في المتصفح قبل تشغيل التايمر
+    if (typeof window === 'undefined') return;
 
-    // Create 20 demo souls
+    const colors = ['#ef4444', '#3b82f6', '#fbbf24', '#10b981', '#8b5cf6', '#f3f4f6'];
+    const messages = ['أحلم بعالم أفضل', 'السلام للجميع', 'الحب هو الإجابة', 'كن التغيير', 'أنا هنا', 'معاً أقوى'];
+
     for (let i = 0; i < 20; i++) {
       setTimeout(() => {
         addSoul({
@@ -48,26 +43,21 @@ export default function Home() {
           size: 0.3 + Math.random() * 0.5,
           speed: 0.5 + Math.random() * 1.5,
         });
-      }, i * 200); // Stagger the creation
+      }, i * 200);
     }
-  }, []);
+  }, [addSoul]);
 
   return (
     <main className="relative w-full h-screen overflow-hidden">
-      {/* Welcome screen */}
       <WelcomeScreen />
-
-      {/* 3D Universe */}
       <Universe />
-
-      {/* UI Overlays */}
+      
       <Onboarding />
       <SoulModal />
       <Dashboard />
       <LiveFeed />
       <Controls />
 
-      {/* Instructions */}
       <div className="fixed bottom-4 right-4 p-4 bg-black/60 backdrop-blur-sm rounded-lg border border-white/10 max-w-xs text-sm text-gray-300 z-20">
         <p className="font-bold text-white mb-2">🎮 التحكم:</p>
         <ul className="space-y-1 text-xs">
@@ -78,7 +68,6 @@ export default function Home() {
         </ul>
       </div>
 
-      {/* Branding */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 opacity-10">
         <h1 className="text-9xl font-bold text-white">
           LightVerse
