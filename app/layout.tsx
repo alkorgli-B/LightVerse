@@ -1,7 +1,7 @@
 
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import BackgroundMusic from './components/BackgroundMusic';
+import BackgroundMusic from '../components/BackgroundMusic';
 
 // إعدادات الـ Viewport لضمان تجربة الـ App ومنع التكبير العشوائي
 export const viewport: Viewport = {
