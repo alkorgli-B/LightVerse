@@ -35,7 +35,6 @@ interface UniverseState {
   showOnboarding: boolean;
   showDashboard: boolean;
   
-  // Actions
   addSoul: (soul: Omit<Soul, 'id' | 'energy' | 'connections' | 'isStarred' | 'createdAt'>) => Soul;
   removeSoul: (id: string) => void;
   updateSoul: (id: string, updates: Partial<Soul>) => void;
@@ -76,8 +75,8 @@ export const useUniverseStore = create<UniverseState>()(
         set((state) => ({
           souls: [...state.souls, soul],
           totalSouls: state.totalSouls + 1,
-          mySoulId: soul.id, // حفظ معرف الروح الخاصة بالمستخدم تلقائياً
-          showOnboarding: false, // إخفاء واجهة الترحيب بمجرد إنشاء الروح
+          mySoulId: soul.id,
+          showOnboarding: false,
         }));
         
         return soul;
@@ -144,18 +143,19 @@ export const useUniverseStore = create<UniverseState>()(
           if (!conn) return state;
 
           return {
-            connections: state.connections.filter((c) => c !== id), // تصحيح بسيط هنا
+            // التعديل هنا: نقارن الـ id الخاص بالكائن بالـ id الممرر للدالة
+            connections: state.connections.filter((c) => c.id !== id),
             souls: state.souls.map((s) => {
               if (s.id === conn.fromId) {
                 return {
                   ...s,
-                  connections: s.connections.filter((c) => c !== conn.toId),
+                  connections: s.connections.filter((cid) => cid !== conn.toId),
                 };
               }
               if (s.id === conn.toId) {
                 return {
                   ...s,
-                  connections: s.connections.filter((c) => c !== conn.fromId),
+                  connections: s.connections.filter((cid) => cid !== conn.fromId),
                 };
               }
               return s;
@@ -188,9 +188,8 @@ export const useUniverseStore = create<UniverseState>()(
       setMySoulId: (id) => set({ mySoulId: id }),
     }),
     {
-      name: 'zen-universe-storage', // اسم المفتاح في localStorage
+      name: 'zen-universe-storage',
       storage: createJSONStorage(() => localStorage),
-      // تحديد البيانات التي نريد حفظها فقط لضمان عدم حفظ بيانات مؤقتة
       partialize: (state) => ({ 
         souls: state.souls, 
         mySoulId: state.mySoulId,
