@@ -68,11 +68,8 @@ export default function Home() {
         </ul>
       </div>
 
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 opacity-10">
-        <h1 className="text-9xl font-bold text-white">
-          LightVerse
-        </h1>
-      </div>
-    </main>
-  );
-}
+<div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.03] overflow-hidden w-full flex justify-center">
+  <h1 className="text-[18vw] md:text-[12vw] font-black text-white tracking-tighter uppercase leading-none">
+    LightVerse
+  </h1>
+</div>
