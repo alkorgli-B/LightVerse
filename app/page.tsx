@@ -1,6 +1,4 @@
-'use client';
-
-
+"use client";
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import WelcomeScreen from '../components/WelcomeScreen';
