@@ -24,7 +24,6 @@ export default function Home() {
   const addSoul = useUniverseStore((state) => state.addSoul);
 
   useEffect(() => {
-    // حماية إضافية للتأكد من أننا في المتصفح قبل تشغيل التايمر
     if (typeof window === 'undefined') return;
 
     const colors = ['#ef4444', '#3b82f6', '#fbbf24', '#10b981', '#8b5cf6', '#f3f4f6'];
@@ -48,7 +47,7 @@ export default function Home() {
   }, [addSoul]);
 
   return (
-    <main className="relative w-full h-screen overflow-hidden">
+    <main className="relative w-full h-screen overflow-hidden bg-[#0a0118]">
       <WelcomeScreen />
       <Universe />
       
@@ -58,18 +57,22 @@ export default function Home() {
       <LiveFeed />
       <Controls />
 
-      <div className="fixed bottom-4 right-4 p-4 bg-black/60 backdrop-blur-sm rounded-lg border border-white/10 max-w-xs text-sm text-gray-300 z-20">
+      {/* تعليمات التحكم - محسنة للموبايل */}
+      <div className="fixed bottom-4 right-4 p-4 bg-black/60 backdrop-blur-sm rounded-lg border border-white/10 max-w-[160px] md:max-w-xs text-xs text-gray-300 z-20">
         <p className="font-bold text-white mb-2">🎮 التحكم:</p>
-        <ul className="space-y-1 text-xs">
-          <li>• اسحب بالماوس للتحرك</li>
-          <li>• Scroll للتكبير/التصغير</li>
-          <li>• انقر على كرة للتفاعل</li>
-          <li>• Space للقفز عشوائياً</li>
+        <ul className="space-y-1">
+          <li>• اسحب للتحرك</li>
+          <li>• Pinch للتكبير</li>
+          <li>• انقر للتفاعل</li>
         </ul>
       </div>
 
-<div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.03] overflow-hidden w-full flex justify-center">
-  <h1 className="text-[18vw] md:text-[12vw] font-black text-white tracking-tighter uppercase leading-none">
-    LightVerse
-  </h1>
-</div>
+      {/* الاسم في الخلفية - تم إصلاح التناسب هنا */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.04] w-full flex justify-center px-4 overflow-hidden">
+        <h1 className="text-[15vw] md:text-[12vw] font-black text-white tracking-tighter uppercase leading-none text-center">
+          LightVerse
+        </h1>
+      </div>
+    </main>
+  );
+}
